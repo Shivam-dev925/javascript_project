@@ -28,5 +28,6 @@ let score1 = 100
 let arrayOfScore2 = [444,666,788,999,33]
 let score3 = 300
 
+
 var createdArr=Array.of(score1, arrayOfScore2, score3);
 console.log(createdArr.flat());
