@@ -1,11 +1,9 @@
 name: Postman Monitor Dashboard
 
 on:
-#   schedule:
-#     - cron: "0 0 * * *"  # This triggers the workflow daily at midnight
   push:
     branches:
-      - main  # Replace 'main' with your default branch name if different
+      - main  # Make sure this matches your default branch name
 
 jobs:
   build:
@@ -14,60 +12,53 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+
       - name: Set Timestamp
         id: set_timestamp
-        run: |
-           echo "::set-output name=timestamp::$(date -u +'%Y%m%d%H%M%S')"
+        run: echo "::set-output name=timestamp::$(date -u +'%Y%m%d%H%M%S')"
+
       - name: Configure Git
         run: |
-          git config --global user.email "chshivam815@gmail.com"
-          git config --global user.name "Shivam choudhary"
-          
-      - name: Create Dir
-        run: |
-          mkdir BookAppointmentReport
-      
+          git config --global user.email "youremail@example.com"
+          git config --global user.name "Your Name"
+
+      - name: Create Report Directory
+        run: mkdir BookAppointmentReport
+
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
           node-version: '16'
-      
-      - name: Install newmen
+
+      - name: Install Newman and Reporter
         run: |
           npm install -g newman
           npm install -g newman-reporter-htmlextra
 
       - name: Run Collection
-        run: |
-          newman run "bookAppointmentCollection.json" -e "" -r htmlextra --reporter-htmlextra-export BookAppointmentReport/index.html
-          
-      - name: Create GitHub Pages branch
-        run: |
-          # Add the changes to the file
-          git add .github/workflows/api_testing.yml
+        run: newman run "bookAppointmentCollection.json" -e "" -r htmlextra --reporter-htmlextra-export BookAppointmentReport/index.html
 
-          # Commit the changes with a commit message
-          git commit -m "Committing changes to api_testing.yml"
+      - name: Checkout GitHub Pages branch
+        run: |
           git checkout --orphan gh-pages
-          git pull origin gh-pages
-            git add .
-                      git commit -m "pulled changes "
-          git push -u origin gh-pages
-          ls
-          cp BookAppointmentReport BookAppointmentReport        
-        
-          
-          git commit -m "uploaded html file to gh-pages with id ${{ steps.set_timestamp.outputs.timestamp }}"
+          git reset --hard
+          git pull origin gh-pages --allow-unrelated-histories || true  # Pull if branch exists, otherwise ignore
+
+      - name: Update GitHub Pages branch
+        run: |
+          cp -R BookAppointmentReport/* .
+          git add .
+          git commit -m "Deploy HTML report with timestamp ${{ steps.set_timestamp.outputs.timestamp }}" || echo "No changes to commit"
           git push -u origin gh-pages
 
-      - name: Deploy HTML report to GitHub Pages
+      - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./BookAppointmentReport    
-          
+          publish_dir: ./
+
       - name: Publish report
         uses: actions/upload-artifact@v3
         with:
-           name: BookAppointmentApiReports
-           path: BookAppointmentReport  
+          name: BookAppointmentApiReports
+          path: BookAppointmentReport
