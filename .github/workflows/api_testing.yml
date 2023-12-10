@@ -14,6 +14,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        
+      - name: Configure Git
+        run: |
+          git config --global user.email "chshivam815@gmail.com"
+          git config --global user.name "Shivam choudhary"
+          
       - name: Create Dir
         run: |
           mkdir BookAppointmentReport
