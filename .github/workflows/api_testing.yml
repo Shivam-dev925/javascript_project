@@ -47,7 +47,7 @@ jobs:
           git clean -df
           git pull origin gh-pages
           # Copy the HTML file from the workflow artifacts to the root
-          cp ${{ github.workspace }}/BookAppointmentReport/index.html index.html
+          cp /home/runner/work/javascript_project/javascript_project/BookAppointmentReport/index.html index.html
           git add .
           git commit -m "Initialize GitHub Pages"
           git push -u origin gh-pages
