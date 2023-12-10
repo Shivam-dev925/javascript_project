@@ -43,7 +43,10 @@ jobs:
         with:
            name: BookAppointmentApiReports
            path: BookAppointmentReport
-           
+      - name: Pull Changes
+        run: |
+          git pull origin main
+          
       - name: Create GitHub Pages branch
         run: |
           git checkout --orphan gh-pages
