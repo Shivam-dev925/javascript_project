@@ -49,7 +49,7 @@ jobs:
           cp -R BookAppointmentReport/* .
           git add .
           git commit -m "Deploy HTML report with timestamp ${{ steps.set_timestamp.outputs.timestamp }}" || echo "No changes to commit"
-          git push -u origin gh-pages
+          git push -u origin gh-pages --force  # Using force push here
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
