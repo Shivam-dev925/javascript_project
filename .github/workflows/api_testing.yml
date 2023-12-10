@@ -52,6 +52,7 @@ jobs:
           git checkout --orphan gh-pages
           git rm -rf .
           git clean -df
+          git pull origin gh-pages
           echo "Book Appointment Report" > index.md
           git add index.md
           git commit -m "Initialize GitHub Pages"
