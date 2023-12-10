@@ -30,7 +30,7 @@ jobs:
 
       - name: Run Collection
         run: |
-          newman run "" -e "bookAppointmentCollection.json" -r htmlextra --reporter-htmlextra-export BookAppointmentReport/index.html
+          newman run "bookAppointmentCollection.json" -e "" -r htmlextra --reporter-htmlextra-export BookAppointmentReport/index.html
 
       - name: Publish report
         uses: actions/upload-artifact@v3
