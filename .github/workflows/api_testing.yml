@@ -37,15 +37,6 @@ jobs:
       - name: Run Collection
         run: |
           newman run "bookAppointmentCollection.json" -e "" -r htmlextra --reporter-htmlextra-export BookAppointmentReport/index.html
-
-      - name: Publish report
-        uses: actions/upload-artifact@v3
-        with:
-           name: BookAppointmentApiReports
-           path: BookAppointmentReport
-      - name: Pull Changes
-        run: |
-          git pull origin main
           
       - name: Create GitHub Pages branch
         run: |
@@ -68,4 +59,10 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./BookAppointmentReport      
+          publish_dir: ./BookAppointmentReport    
+          
+      - name: Publish report
+        uses: actions/upload-artifact@v3
+        with:
+           name: BookAppointmentApiReports
+           path: BookAppointmentReport  
