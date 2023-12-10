@@ -45,8 +45,7 @@ jobs:
         run: |
           git checkout --orphan gh-pages
           git pull origin gh-pages
-          ls
-          
+          cp BookAppointmentReport/index.html .          
           git add .
           git commit -m "Initialize GitHub Pages"
           git push -u origin gh-pages
