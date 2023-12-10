@@ -1,0 +1,50 @@
+name: Postman Monitor Dashboard
+
+on:
+#   schedule:
+#     - cron: "0 0 * * *"  # This triggers the workflow daily at midnight
+  push:
+    branches:
+      - main  # Replace 'main' with your default branch name if different
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      
+      - name: Install Postman CLI
+        run: |
+          npm install -g newman
+
+      - name: Fetch Postman Monitor Results
+        run: |
+          # Replace `YOUR_API_KEY` and `YOUR_MONITOR_ID` with actual values
+          newman run https://api.getpostman.com/monitors/1ee8da11-2294-4650-a2f4-110ee92df09a \
+            -e https://api.getpostman.com/environments/default \
+            --global-var "apiKey=PMAK-6575c0c4600dc80040b52d28-226e6c21e39cf5bde5ed38ab64566d3b4b" \
+            --reporters cli,json --reporter-json-export postman_results.json
+
+      - name: Generate Dashboard
+        run: |
+          # Use a script or tool to process the fetched data and generate a dashboard
+          # Example: If using Node.js and a templating engine like EJS
+          npm install ejs
+          # Generate HTML using fetched data and EJS template
+          node generate_dashboard.js
+
+      - name: Commit Dashboard Updates
+        run: |
+          # Commit generated dashboard files back to the repository
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "Update dashboard"
+          git push
