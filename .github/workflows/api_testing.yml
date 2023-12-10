@@ -44,7 +44,6 @@ jobs:
       - name: Create GitHub Pages branch
         run: |
           git checkout --orphan gh-pages
-          git rm -rf .
           git clean -df
           git pull origin gh-pages
           # Copy the HTML file from the workflow artifacts to the root
