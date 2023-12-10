@@ -50,9 +50,13 @@ jobs:
           git commit -m "Committing changes to api_testing.yml"
           git checkout --orphan gh-pages
           git pull origin gh-pages
+            git add .
+                      git commit -m "pulled changes "
+          git push -u origin gh-pages
           ls
-          cp BookAppointmentReport/index.html .          
-          git add .
+          cp BookAppointmentReport BookAppointmentReport        
+        
+          
           git commit -m "uploaded html file to gh-pages with id ${{ steps.set_timestamp.outputs.timestamp }}"
           git push -u origin gh-pages
 
