@@ -54,6 +54,12 @@ jobs:
           git clean -df
           git pull origin gh-pages
           echo "Book Appointment Report" > index.md
+          # Copy the HTML file from the artifact directory to the root
+          cp BookAppointmentReport/index.html index.html
+          git add .
+          git commit -m "Initialize GitHub Pages"
+          git push -u origin gh-pages
+
           git add index.md
           git commit -m "Initialize GitHub Pages"
           git push -u origin gh-pages
