@@ -11,17 +11,15 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: Get commit messages and descriptions
-        id: get_commit_info
+      
+      - name: Get commit information
+        id: commit_info
         run: |
-          MERGE_COMMIT_HASH=$(git log --merges --first-parent -n 1 --pretty=format:"%H" origin/main)
-          
-          COMMIT_MESSAGES=$(git log --format=%B -n 1 ${MERGE_COMMIT_HASH})
-          echo "::set-output name=commit_messages::${COMMIT_MESSAGES}"
+          COMMIT_MESSAGE=$(git log --format=%B -n 1 ${{ github.sha }})
+          echo "::set-output name=commit_message::${COMMIT_MESSAGE}"
 
-          COMMIT_DESCRIPTIONS=$(git log --format=%s ${MERGE_COMMIT_HASH}^..${MERGE_COMMIT_HASH})
-          echo "::set-output name=commit_descriptions::${COMMIT_DESCRIPTIONS}"
+          COMMIT_DESCRIPTION=$(git log --format=%s -n 1 ${{ github.sha }})
+          echo "::set-output name=commit_description::${COMMIT_DESCRIPTION}"
 
       - name: Create Release
         id: create_release
@@ -30,6 +28,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: v1.0.0  # Specify the tag for the release
-          release_name: ${{ steps.get_commit_info.outputs.commit_messages }}  # Title based on commit messages
-          body: |
-            ${{ steps.get_commit_info.outputs.commit_descriptions }}  # Body based on commit descriptions
+          release_name: ${{ steps.commit_info.outputs.commit_message }}  # Title based on commit message
+          body: ${{ steps.commit_info.outputs.commit_description }}  # Body based on commit description
