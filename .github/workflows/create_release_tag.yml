@@ -26,6 +26,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v1.0.0  # Specify the tag for the release
+          tag_name: v${{ steps.commit_info.outputs.commit_sha }}  # Unique tag name based on commit SHA
           release_name: ${{ steps.commit_info.outputs.commit_message }}  # Title based on commit message
           body: ${{ steps.commit_info.outputs.commit_description }}  # Body based on commit description
