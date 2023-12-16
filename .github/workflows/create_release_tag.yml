@@ -15,10 +15,12 @@ jobs:
       - name: Get commit messages and descriptions
         id: get_commit_info
         run: |
-          COMMIT_MESSAGES=$(git log --format=%B ${{ github.event.before }}..${{ github.sha }} | grep -v '^$')
+          MERGE_COMMIT_HASH=$(git log --merges --first-parent -n 1 --pretty=format:"%H" main)
+          
+          COMMIT_MESSAGES=$(git log --format=%B ${MERGE_COMMIT_HASH}^..${MERGE_COMMIT_HASH} | grep -v '^$')
           echo "::set-output name=commit_messages::${COMMIT_MESSAGES}"
 
-          COMMIT_DESCRIPTIONS=$(git log --format=%s ${{ github.event.before }}..${{ github.sha }} | grep -v '^$')
+          COMMIT_DESCRIPTIONS=$(git log --format=%s ${MERGE_COMMIT_HASH}^..${MERGE_COMMIT_HASH} | grep -v '^$')
           echo "::set-output name=commit_descriptions::${COMMIT_DESCRIPTIONS}"
 
       - name: Create Release
