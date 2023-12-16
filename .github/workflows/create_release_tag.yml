@@ -1,0 +1,33 @@
+name: Create Release on Merge to Main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  create_release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Get commit messages and descriptions
+        id: get_commit_info
+        run: |
+          COMMIT_MESSAGES=$(git log --format=%B ${{ github.event.before }}..${{ github.sha }} | grep -v '^$')
+          echo "::set-output name=commit_messages::${COMMIT_MESSAGES}"
+
+          COMMIT_DESCRIPTIONS=$(git log --format=%s ${{ github.event.before }}..${{ github.sha }} | grep -v '^$')
+          echo "::set-output name=commit_descriptions::${COMMIT_DESCRIPTIONS}"
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v1.0.0  # Specify the tag for the release
+          release_name: ${{ steps.get_commit_info.outputs.commit_messages }}  # Title based on commit messages
+          body: |
+            ${{ steps.get_commit_info.outputs.commit_descriptions }}  # Body based on commit descriptions
