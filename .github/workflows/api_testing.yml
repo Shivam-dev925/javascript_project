@@ -30,13 +30,11 @@ jobs:
         with:
           node-version: '16'
 
-      - name: Install Newman and Reporter
-        run: |
-          npm install -g newman
-          npm install -g newman-reporter-htmlextra
+      - name: Install Newman
+        run: npm install -g newman
 
-      - name: Run Collection
-        run: newman run "bookAppointmentCollection.json" -e "" -r htmlextra --reporter-htmlextra-export BookAppointmentReport/index.html
+      - name: Run API Tests
+        run: newman run api_spec.yml --reporters cli,html --reporter-html-export BookAppointmentReport/index.html
 
       - name: Checkout GitHub Pages branch
         run: |
