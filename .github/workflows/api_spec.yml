@@ -17,15 +17,34 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '14'
-
+      - name: Create Report Directory
+        run: mkdir ApiSpecReport
+        
       - name: Install Redoc CLI
         run: npm install -g redoc-cli
 
       - name: Generate HTML documentation
-        run: redoc-cli bundle path/to/your/api_spec.yml -o path/to/output/index.html --title "API Documentation"
+        run: redoc-cli bundle api_spec.yml -o ApiSpecReport/index.html --title "API Documentation"
 
+      - name: Checkout GitHub Pages branch
+        run: |
+          git checkout --orphan gh-pages
+          git reset --hard
+          git pull origin gh-pages --allow-unrelated-histories || true  # Pull if branch exists, otherwise ignore
+      - name: Update GitHub Pages branch
+        run: |
+          cp -R ApiSpecReport/* .
+          git add .
+          git commit -m "Deploy HTML report with timestamp ${{ steps.set_timestamp.outputs.timestamp }}" || echo "No changes to commit"
+          git push -u origin gh-pages --force  # Using force push here
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: path/to/output/
+          publish_dir: ./
+
+      - name: Publish report
+        uses: actions/upload-artifact@v3
+        with:
+          name: ApiSpecReports
+          path: ApiSpecReport
