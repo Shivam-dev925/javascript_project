@@ -1,0 +1,31 @@
+name: API Documentation Generation
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  generate_documentation:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install Redoc CLI
+        run: npm install -g redoc-cli
+
+      - name: Generate HTML documentation
+        run: redoc-cli bundle path/to/your/api_spec.yml -o path/to/output/index.html --title "API Documentation"
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: path/to/output/
