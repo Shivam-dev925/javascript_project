@@ -1,0 +1,39 @@
+name: Build and Upload App and webapp
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        type: "choice"
+        description: "Choose the platform"
+        required: true
+        default: "web"
+        options:
+          - "web"
+          - "mobile"
+
+      lane:
+        type: "choice"
+        description: "Choose the lane"
+        required: true
+        default: "internal beta"
+        options:
+          - "internal beta"
+          - "external beta"
+
+jobs:
+  build_and_upload:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Upload web
+        if: ${{ github.event.inputs.platform == 'web' }}
+        run: |
+          echo "Uploading web app..."
+
+      - name: Mobile App Lanes
+        if: ${{ github.event.inputs.platform == 'mobile' }}
+        run: |
+          echo "Selected platform: mobile"
+          lanes_input=${{ github.event.inputs.lane }}
+          echo "Uploading mobile app to lanes: $lanes_input"
