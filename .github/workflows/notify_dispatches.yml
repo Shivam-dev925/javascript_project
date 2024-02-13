@@ -21,6 +21,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: d
+        run: |
+          echo "${{github.event.inputs.notify}}"
+
       - name: Set Timestamp
         if: ${{ (github.event.inputs.platform == 'web') && (github.event.inputs.notify)}}
         id: set_timestamp
