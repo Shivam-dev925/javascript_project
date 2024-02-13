@@ -22,7 +22,7 @@ jobs:
 
     steps:
       - name: Set Timestamp
-        if: ${{ github.event.inputs.platform == 'web' && github.event.inputs.notify}}
+        if: ${{ github.event.inputs.platform == 'web' && github.event.inputs.notify==true}}
         id: set_timestamp
         run: |
           echo "::set-output name=timestamp::$(date -u +'%Y%m%d%H%M%S')"
