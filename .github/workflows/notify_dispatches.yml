@@ -1,0 +1,28 @@
+name: Raxa-deploy-workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        type: "choice"
+        description: "Choose the platform"
+        required: true
+        options:
+          - "web"
+          - "android"
+
+      notify:
+        type: boolean
+        description: "Do you want to create a PR on webapp-be Repo for production webapp deployment"
+        default: false
+
+jobs:
+  build_and_package:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set Timestamp
+        if: ${{ github.event.inputs.platform == 'web' && github.event.inputs.notify}}
+        id: set_timestamp
+        run: |
+          echo "::set-output name=timestamp::$(date -u +'%Y%m%d%H%M%S')"
