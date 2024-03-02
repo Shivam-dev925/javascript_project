@@ -22,6 +22,7 @@ jobs:
         
       - name: Install Redoc CLI
         run: npm install -g redoc-cli
+        
 
       - name: Generate HTML documentation
         run: redoc-cli bundle api_spec.yml -o ApiSpecReport/index.html --title "API Documentation"
