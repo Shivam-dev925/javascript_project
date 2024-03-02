@@ -36,7 +36,8 @@ jobs:
           npm install -g newman-reporter-htmlextra
 
       - name: Run Collection
-        run: newman run "bookAppointmentCollection.json" -e "" -r htmlextra --reporter-htmlextra-export BookAppointmentReport/index.html
+        run: newman run "bookAppointmentCollection.json" -e "" -r htmlextra --reporter-htmlextra-export BookAppointmentReport/index.html --reporter-htmlextra-title "testingCollection"
+
 
       - name: Checkout GitHub Pages branch
         run: |
