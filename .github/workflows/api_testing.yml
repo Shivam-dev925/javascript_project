@@ -28,12 +28,12 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
+          node-version: '18'
 
       - name: Install Newman and Reporter
         run: |
-          npm install -g newman
-          npm install -g newman-reporter-htmlextra
+          npm install -g newman@6.1.1
+          npm install -g newman-reporter-htmlextra@1.23.0
 
       - name: Run Collection
         run: newman run "bookAppointmentCollection.json" -e "" -r htmlextra --reporter-htmlextra-export BookAppointmentReport/index.html --reporter-htmlextra-title "testingCollection"
