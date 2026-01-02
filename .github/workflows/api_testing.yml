@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set Timestamp
         run: echo "timestamp=$(date +%s)" >> $GITHUB_OUTPUT
@@ -26,9 +26,9 @@ jobs:
         run: mkdir BookAppointmentReport
 
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
 
       - name: Install Newman and Reporter
         run: |
@@ -36,7 +36,7 @@ jobs:
           npm install -g newman-reporter-htmlextra
 
       - name: Run Collection
-        run: newman run "bookAppointmentCollection.json" -e "" -r htmlextra --reporter-htmlextra-export BookAppointmentReport/index.html
+        run: newman run "bookAppointmentCollection.json" -r cli,htmlextra --reporter-htmlextra-export BookAppointmentReport/index.html --timeout-request 30000
         
       - name: Checkout GitHub Pages branch
         run: |
@@ -48,14 +48,14 @@ jobs:
         run: |
           cp -R BookAppointmentReport/* .
           git add .
-          git commit -m "Deploy HTML report with timestamp ${{ steps.set_timestamp.outputs.timestamp }}" || echo "No changes to commit"
+          git commit -m "Deploy HTML report with timestamp ${{ steps.timestamp.outputs.timestamp }}" || echo "No changes to commit"
           git push -u origin gh-pages --force  # Using force push here
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./
+          publish_dir: ./BookAppointmentReport
 
       - name: Publish report
         uses: actions/upload-artifact@v4
