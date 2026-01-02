@@ -14,8 +14,8 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set Timestamp
-        id: set_timestamp
-        run: echo "::set-output name=timestamp::$(date -u +'%Y%m%d%H%M%S')"
+        run: echo "timestamp=$(date +%s)" >> $GITHUB_OUTPUT
+        id: timestamp
 
       - name: Configure Git
         run: |
